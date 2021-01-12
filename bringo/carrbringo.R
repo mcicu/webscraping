@@ -4,7 +4,8 @@ library(rvest)
 library(jsonlite)
 library(openxlsx)
 library(dplyr)
-library(parallel)
+library(future)
+library(future.apply)
 
 
 path0 = gsub("/Scripturi","",getwd())
@@ -20,10 +21,6 @@ path2
 removeNewlineAndMultiWhitespaceFn = function(a) {
   b = gsub("(\\r|\\n|\\s)+", " ", a);
   return(b);
-}
-
-print_parallel <- function(...){
-  system(sprintf('echo "\n%s"', paste0(..., collapse="")))
 }
 
 ### cod
@@ -90,7 +87,7 @@ for (i in 1:length(link_subsort)) {
 
 ## pagini produse
 getBringoProductLinks = function(pageURL) {
-  print_parallel(paste("Pagina produse: ", pageURL));
+  print(paste("Pagina produse: ", pageURL));
   productURL = html_session(pageURL) %>% read_html() %>%
     html_nodes("div.top-product-listing-box>a.bringo-product-name") %>% 
     html_attr("href")
@@ -98,15 +95,15 @@ getBringoProductLinks = function(pageURL) {
   return(productURL);
 }
 
-numCores <- detectCores()
-link_prod = do.call(c, mclapply(link_subsort_pages, getBringoProductLinks, mc.cores = numCores))
+plan(multisession)
+link_prod = do.call(c, future_lapply(link_subsort_pages, getBringoProductLinks))
 link_prod = paste0(bringo, link_prod)
 
 ## preluare detalii produse
 t1 = Sys.time()
 
 getBringoProducts = function(productURL) {
-  print_parallel(paste("Produs: ", productURL))
+  print(paste("Produs: ", productURL))
   
   pageHTML = html_session(productURL) %>% read_html()
   
@@ -141,8 +138,8 @@ getBringoProducts = function(productURL) {
   return(informatiiProdus)
 }
 
-numCores <- detectCores()
-df_produse = do.call(rbind, mclapply(link_prod, getBringoProducts, mc.cores = numCores))
+plan(multisession)
+df_produse = do.call(rbind, future_lapply(link_prod, getBringoProducts))
 
 t2 = t1 - Sys.time()
 # ~30 minute

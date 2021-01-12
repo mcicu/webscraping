@@ -3,17 +3,14 @@ library(jsonlite)
 library(rvest)
 library(openxlsx)
 library(dplyr)
-library(parallel)
+library(future)
+library(future.apply)
 
 path0 = gsub("/Scripturi","",getwd())
 # pentru scriere fisier mega cu date colectate
 path1 = paste0(path0, "/Date_brute/Alimente")
 # pentru scriere fisier de verificat
 path2 = paste0(path0, "/Verificare")
-
-print_parallel <- function(...){
-  system(sprintf('echo "\n%s\n"', paste0(..., collapse="")))
-}
 
 ID_CATEGORIE_ALIMENTE = 77148
 SUBCATEGORII_ALIMENTE = c(77150, 77152, 77153, 77155, 77156, 77158, 77159, 
@@ -69,7 +66,7 @@ getCoraProducts = function(categoryId, subcategoryId) {
       responseObject = fromJSON(textResponse)
       responseProducts = responseObject$products
       
-      print_parallel(paste("Produse incarcate = ", length(products$ID), "; categorie =", categoryId, ", subcategorie =", subcategoryId))
+      print(paste("Produse incarcate = ", length(products$ID), "; categorie =", categoryId, ", subcategorie =", subcategoryId))
       
       foundProducts = list()
       foundProducts$ID = responseProducts$partnumber
@@ -93,8 +90,10 @@ getCoraProducts = function(categoryId, subcategoryId) {
 }
 
 t1 = Sys.time()
-numCores <- detectCores()
-cora = do.call(rbind, mclapply(1:nrow(DF_CATEGORII), function(x) { return(getCoraProducts(DF_CATEGORII$categoryId[x], DF_CATEGORII$subcategoryId[x]))}, mc.cores = numCores))
+
+plan(multisession)
+cora = do.call(rbind, 
+               future_lapply(1:nrow(DF_CATEGORII), function(x) { return(getCoraProducts(DF_CATEGORII$categoryId[x], DF_CATEGORII$subcategoryId[x]))}))
 
 # Testare
 t2 = t1 - Sys.time()
