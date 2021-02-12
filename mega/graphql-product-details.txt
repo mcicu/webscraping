@@ -1,0 +1,482 @@
+query ProductDetails($anonymousCartCookie: String, $productCode: String!, $lang: String!) {
+  productDetails(anonymousCartCookie: $anonymousCartCookie, productCode: $productCode, lang: $lang) {
+    additionalLogo
+    available
+    availableForPickup
+    averageRating
+    badges {
+      ...ProductBadge
+      __typename
+    }
+    baseOptions
+    catalogId
+    catalogVersion
+    categories {
+      ...ProductCategory
+      __typename
+    }
+    configurable
+    classifications {
+      ...ProductClassification
+      __typename
+    }
+    code
+    countryFlagUrl
+    dayPrice
+    department
+    description
+    eanCodes
+    thumbnailImage
+    formattedDepartment
+    freshnessDuration
+    freshnessDurationTipFormatted
+    frozen
+    recyclable
+    galleryImages {
+      ...Image
+      __typename
+    }
+    groupedGalleryImages {
+      ...GroupedImage
+      __typename
+    }
+    wineFoodAssociations {
+      ...WineFoodAssociation
+      __typename
+    }
+    expertReviewsMedals {
+      ...ExpertReview
+      __typename
+    }
+    expertReviewsScores {
+      ...ExpertReview
+      __typename
+    }
+    videoLinks
+    isReviewEnabled
+    review {
+      ...ProductReview
+      __typename
+    }
+    wineRegion {
+      ...WineRegion
+      __typename
+    }
+    wineProducer {
+      ...WineProducer
+      __typename
+    }
+    wineExhibitor {
+      ...WineExhibitor
+      __typename
+    }
+    vintages {
+      ...Vintage
+      __typename
+    }
+    wsNutriFactData {
+      ...NutriFact
+      __typename
+    }
+    healthierAlternative {
+      ...ProductBlockDetails
+      __typename
+    }
+    groupedImages {
+      ...GroupedImage
+      __typename
+    }
+    hopeId
+    images {
+      ...Image
+      __typename
+    }
+    isAvailableByCase
+    isWine
+    keywords
+    limitedAssortment
+    localizedUrls {
+      ...LocalizedUrl
+      __typename
+    }
+    delivered
+    manufacturer
+    maxOrderQuantity
+    manufacturerName
+    manufacturerSubBrandName
+    miniCartImage {
+      ...Image
+      __typename
+    }
+    mobileClassificationAttributes {
+      ...MobileClassificationAttribute
+      __typename
+    }
+    mobileFees {
+      ...MobileFee
+      __typename
+    }
+    name
+    nonSEOUrl
+    numberOfReviews
+    nutriScoreLetter
+    nutriScoreLetterImage {
+      ...Image
+      __typename
+    }
+    onlineExclusive
+    potentialPromotions {
+      ...Promotion
+      __typename
+    }
+    price {
+      ...Price
+      __typename
+    }
+    productProposedPackaging
+    productProposedPackaging2
+    purchasable
+    stock {
+      ...Stock
+      __typename
+    }
+    summary
+    totalProductFees
+    uid
+    url
+    previouslyBought
+    __typename
+  }
+}
+
+fragment ProductReview on ProductReview {
+  productRating {
+    count
+    value
+    __typename
+  }
+  reviews {
+    alias
+    comment
+    date
+    headline
+    rating
+    message
+    reasonCode
+    __typename
+  }
+  __typename
+}
+
+fragment ProductBlockDetails on Product {
+  available
+  averageRating
+  numberOfReviews
+  manufacturerName
+  manufacturerSubBrandName
+  code
+  freshnessDuration
+  freshnessDurationTipFormatted
+  frozen
+  recyclable
+  images {
+    format
+    imageType
+    url
+    __typename
+  }
+  maxOrderQuantity
+  limitedAssortment
+  name
+  onlineExclusive
+  potentialPromotions {
+    alternativePromotionMessage
+    code
+    priceToBurn
+    promotionType
+    range
+    redemptionLevel
+    toDisplay
+    description
+    title
+    promoBooster
+    simplePromotionMessage
+    __typename
+  }
+  price {
+    approximatePriceSymbol
+    currencySymbol
+    formattedValue
+    priceType
+    supplementaryPriceLabel1
+    supplementaryPriceLabel2
+    showStrikethroughPrice
+    discountedPriceFormatted
+    unit
+    unitCode
+    unitPrice
+    value
+    __typename
+  }
+  purchasable
+  productProposedPackaging
+  productProposedPackaging2
+  stock {
+    inStock
+    inStockBeforeMaxAdvanceOrderingDate
+    partiallyInStock
+    availableFromDate
+    __typename
+  }
+  url
+  previouslyBought
+  nutriScoreLetter
+  __typename
+}
+
+fragment ProductBadge on ProductBadge {
+  code
+  image {
+    ...Image
+    __typename
+  }
+  tooltipMessage
+  __typename
+}
+
+fragment ProductCategory on ProductCategory {
+  code
+  catalogId
+  catalogVersion
+  name
+  nameNonLocalized
+  productCount
+  sequence
+  uid
+  url
+  __typename
+}
+
+fragment ProductClassification on ProductClassification {
+  code
+  features {
+    code
+    comparable
+    featureValues {
+      value
+      __typename
+    }
+    name
+    range
+    __typename
+  }
+  __typename
+}
+
+fragment Image on Image {
+  altText
+  format
+  galleryIndex
+  imageType
+  url
+  __typename
+}
+
+fragment GroupedImage on GroupedImage {
+  images {
+    ...Image
+    __typename
+  }
+  index
+  __typename
+}
+
+fragment LocalizedUrl on LocalizedUrl {
+  locale
+  url
+  __typename
+}
+
+fragment WineFoodAssociation on WineFoodAssociation {
+  code
+  title
+  icon {
+    ...Image
+    __typename
+  }
+  __typename
+}
+
+fragment ExpertReview on ExpertReview {
+  organization
+  date
+  score
+  note
+  medal
+  __typename
+}
+
+fragment WineRegion on WineRegion {
+  code
+  title
+  name
+  country
+  description
+  image {
+    ...Image
+    __typename
+  }
+  __typename
+}
+
+fragment WineProducer on WineProducer {
+  id
+  name
+  description
+  street
+  postalCode
+  city
+  state
+  country
+  wineTypes
+  __typename
+}
+
+fragment WineExhibitor on WineExhibitor {
+  id
+  name
+  street
+  postalCode
+  city
+  state
+  country
+  __typename
+}
+
+fragment Vintage on Vintage {
+  product {
+    ...ProductBlockDetails
+    __typename
+  }
+  year
+  __typename
+}
+
+fragment NutriFact on NutriFact {
+  nutrients {
+    ...NutrientList
+    __typename
+  }
+  allegery {
+    ...Allergy
+    __typename
+  }
+  ingredients
+  validLifestyle
+  otherInfo {
+    ...OtherInfo
+    __typename
+  }
+  __typename
+}
+
+fragment MobileClassificationAttribute on MobileClassificationAttribute {
+  code
+  value
+  __typename
+}
+
+fragment MobileFee on MobileFee {
+  feeName
+  feeCode
+  priceData {
+    ...Price
+    __typename
+  }
+  feeValue
+  __typename
+}
+
+fragment Price on Price {
+  approximatePriceSymbol
+  averageSize
+  countryCode
+  currencyIso
+  currencySymbol
+  discountedPriceFormatted
+  formattedValue
+  fractionValue
+  intValue
+  priceType
+  showStrikethroughPrice
+  supplementaryPriceLabel1
+  supplementaryPriceLabel2
+  unit
+  unitCode
+  unitPrice
+  unitPriceFormatted
+  value
+  variableStorePrice
+  warehouseCode
+  __typename
+}
+
+fragment Promotion on Promotion {
+  alternativePromotionMessage
+  code
+  promotionType
+  redemptionLevel
+  toDisplay
+  startDate
+  endDate
+  description
+  couldFireMessages
+  firedMessages
+  priority
+  title
+  toDate
+  fromDate
+  promotionClassName
+  promoStartDate
+  range
+  discountPointsPromotion
+  priceToBurn
+  promoBooster
+  simplePromotionMessage
+  __typename
+}
+
+fragment Stock on Stock {
+  inStock
+  inStockBeforeMaxAdvanceOrderingDate
+  partiallyInStock
+  availableFromDate
+  __typename
+}
+
+fragment NutrientList on NutrientList {
+  nutrients {
+    id
+    valueList {
+      ...OtherInfo
+      __typename
+    }
+    __typename
+  }
+  footnote
+  __typename
+}
+
+fragment OtherInfo on OtherInfo {
+  value
+  key
+  order
+  __typename
+}
+
+fragment Allergy on Allergy {
+  id
+  title
+  values
+  __typename
+}
