@@ -18,14 +18,14 @@ set_config(add_headers(.headers = c(
 ### constants ###
 BOOKING_BASE_URL = "https://www.booking.com/searchresults.ro.html"
 ORASE = c("Bucuresti", "Brasov", "Constanta", "Prahova")
-DATA_CHECKIN = "2022-03-28"
-DATA_CHECKOUT = "2022-03-31"
+DATA_CHECKIN = "2022-04-25"
+DATA_CHECKOUT = "2022-04-27"
 
 ### functions ### 
 
 buildSearchParamers = function(cityName, checkin_date, checkout_date, offset) {
   list(
-    "lang" = "en-us",
+    "lang" = "ro",
     "selected_currency" = "RON",
     "src" = "searchresults",
     "ss" = cityName,
@@ -61,19 +61,28 @@ getHotels = function(cityName, checkin_date_str, checkout_date_str) {
     hotelNodes = bookingHTML %>% html_nodes("[data-testid='property-card']")
     
     if (length(hotelNodes) == 0)
-      break;
+      break; #nu au fost gasite alte hoteluri (paginare); iesim din while
     
     hotelNames = hotelNodes %>% html_nodes("[data-testid='title']") %>% html_text()
     hotelStars = sapply(hotelNodes, countHotelStars)
     hotelPrices = hotelNodes %>% 
                   html_nodes("[data-testid='price-and-discounted-price'] span:last-child") %>% 
-                  html_text() %>% parse_number()
+                  html_text() %>% parse_number(locale = locale(grouping_mark = "."))
+    hotelBreakfastValidations = hotelNodes %>%
+                  html_node("[data-testid='recommended-units']") %>% 
+                  html_text() %>% grepl(pattern = "dejun", ignore.case = TRUE)
+    hotelRoomTypes = hotelNodes %>%
+                  html_node("[data-testid='recommended-units']") %>% 
+                  html_node("span.df597226dd") %>% #clasa acestui span s-ar putea schimba in viitor
+                  html_text()
     
     foundHotels = data.frame(nume = hotelNames,
                              stele = hotelStars,
                              pret = hotelPrices,
                              moneda = 'RON',
                              oras = cityName,
+                             mic_dejun = hotelBreakfastValidations,
+                             tip_camera = hotelRoomTypes,
                              data_checkin = checkin_date_str,
                              data_checkout = checkout_date_str,
                              data_culegere = Sys.Date())
