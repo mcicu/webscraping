@@ -27,7 +27,7 @@ PAGINI_CATEGORII = c(
 
 ### functions ### 
 getSubcategories = function(mainCategoryURL) {
-  categoryPageHTML = RETRY("GET", mainCategoryURL, times = 5, pause_cap = 3, pause_min = 2) %>% read_html()
+  categoryPageHTML = RETRY("GET", mainCategoryURL, times = 30, pause_cap = 5, pause_min = 2) %>% read_html()
   subcategoryAnchors = categoryPageHTML %>% html_nodes("span.block-category-link-inline > a")
   subcategories = data.frame(
     url = subcategoryAnchors %>% html_attr("href"),
@@ -36,7 +36,7 @@ getSubcategories = function(mainCategoryURL) {
 }
 
 getProductDetails = function(productURL) {
-  productPageHTML = RETRY("GET", productURL, times = 5, pause_cap = 3, pause_min = 2) %>% read_html()
+  productPageHTML = RETRY("GET", productURL, times = 30, pause_cap = 5, pause_min = 2) %>% read_html()
   productInfoHTML = productPageHTML %>% html_node(".product-info-main")
   
   productDF = data.frame(
@@ -59,7 +59,7 @@ getProducts = function(subcategoryURL, subcategoryName) {
     pageIndex = pageIndex + 1
     print(paste0("Page = ", pageIndex))
     productsPageURL = paste0(subcategoryURL, "?p=", pageIndex)
-    productsPageHTML = RETRY("GET", productsPageURL, times = 5, pause_cap = 3, pause_min = 2) %>% read_html()
+    productsPageHTML = RETRY("GET", productsPageURL, times = 30, pause_cap = 5, pause_min = 2) %>% read_html()
     productListHTML = productsPageHTML %>% html_node("#amasty-shopby-product-list .product-items")
     
     if (is.na(productListHTML)) {
@@ -78,7 +78,7 @@ getProducts = function(subcategoryURL, subcategoryName) {
 ### main execution ###
 t1 = Sys.time()
 subcategories = do.call(rbind, lapply(PAGINI_CATEGORII, getSubcategories))
-cora = do.call(rbind, lapply(1:nrow(subcategories), function(x) {return(getProducts(subcategories$url[x], subcategories$name[x]))}))
+cora = do.call(rbind, future_lapply(1:nrow(subcategories), function(x) {return(getProducts(subcategories$url[x], subcategories$name[x]))}))
 cora$descriere = paste0(cora$descriere, ". UM: ", cora$um)
 cora$um = NULL
 
