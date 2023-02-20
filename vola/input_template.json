@@ -1,0 +1,33 @@
+{
+  "queries": [
+    {
+      "departure": "2023-03-15",
+      "origin": {
+        "code": "OTP",
+        "type": "AIRPORT"
+      },
+      "destination": {
+        "code": "LTN",
+        "type": "AIRPORT"
+      }
+    },
+    {
+      "departure": "2023-03-19",
+      "origin": {
+        "code": "LTN",
+        "type": "AIRPORT"
+      },
+      "destination": {
+        "code": "OTP",
+        "type": "AIRPORT"
+      }
+    }
+  ],
+  "passengers": {
+    "adults": 1,
+    "children": 0,
+    "infants": 0,
+    "youth": 0
+  },
+  "deduplicate": ""
+}
